@@ -130,6 +130,7 @@ typedef struct
 uint8_t* IT8951_Init(int expected_width, int expected_height, int should_revert);
 void IT8951_Cancel(void);
 void IT8951_Display4BppBuffer();
+void IT8951_ClearPanel();
 
 #endif
 

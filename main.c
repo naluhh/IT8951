@@ -136,6 +136,7 @@ int display_4bpp_filename(char *filename) {
     }
     printf("Updating screen for file: %s\n", filename);
     pthread_mutex_lock(&board_mutex);
+    IT8951_ClearPanel();
     IT8951_Display4BppBuffer();
     pthread_mutex_unlock(&board_mutex);
 
