@@ -217,7 +217,7 @@ int main() {
     }
 
     printf("HTTP server running on port 8890...\n");
-    getchar();
+    pause();  // Wait forever until a signal (e.g., SIGTERM)
     MHD_stop_daemon(daemon);
     return 0;
 }
