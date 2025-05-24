@@ -415,7 +415,7 @@ void IT8951_ClearPanel()
 	IT8951DisplayArea(0, 0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 0);
 
 	//Wait for Display Ready
-	IT8951WaitForDisplayReady();
+	// IT8951WaitForDisplayReady();
 }
 
 void IT8951_Display4BppBuffer()
@@ -432,5 +432,5 @@ void IT8951_Display4BppBuffer()
 	//Display Area ?V (x,y,w,h) with mode 2 for fast gray clear mode - depends on current waveform
     IT8951DisplayArea(0,0, gstI80DevInfo.usPanelW, gstI80DevInfo.usPanelH, 2);
 
-   	IT8951WaitForDisplayReady();
+   	// IT8951WaitForDisplayReady();
 }
