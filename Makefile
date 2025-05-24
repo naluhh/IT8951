@@ -4,7 +4,7 @@ TARGET=IT8951
 CFLAGS ?= -O3 -Wall
 
 $(TARGET):$(SRCS)
-	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET) -lbcm2835 -lpng -lpthread
+	$(CC) $(CFLAGS) $(SRCS) -o $(TARGET) -lbcm2835 -lpng -lpthread -lmicrohttpd
 	
 clean:
 	rm -f $(TARGET)
