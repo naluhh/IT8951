@@ -26,6 +26,28 @@ void abort_(const char * s) {
     abort();
 }
 
+void fill_linear_gradient_4bpp(uint8_t *buffer, int width, int height) {
+    uint8_t *pixels = buffer + 2; // Skip first 2 bytes (protocol header)
+    int bytes_per_row = width / 2;
+
+    for (int y = 0; y < height; ++y) {
+        for (int x = 0; x < width; x += 2) {
+            // Compute grayscale levels [0–15] for two adjacent pixels
+            float gx0 = (float)x / (width - 1);
+            float gx1 = (float)(x + 1) / (width - 1);
+
+            uint8_t g0 = (uint8_t)(gx0 * 15.0f + 0.5f);
+            uint8_t g1 = (uint8_t)(gx1 * 15.0f + 0.5f);
+
+            // Pack two 4-bit grayscale values into one byte
+            uint8_t packed = (g0 << 4) | (g1 & 0x0F);
+
+            int byte_index = y * bytes_per_row + (x / 2);
+            pixels[byte_index] = packed;
+        }
+    }
+}
+
 int read_png_file(char* file_name, int* width_ptr, int* height_ptr, png_byte *color_type_ptr, png_byte *bit_depth_ptr, uint8_t *buffer_to_write) {
     char header[8];
     FILE *fp = fopen(file_name, "rb");
@@ -136,6 +158,7 @@ int display_4bpp_filename(char *filename) {
     }
     printf("Updating screen for file: %s\n", filename);
     pthread_mutex_lock(&board_mutex);
+    fill_linear_gradient_4bpp(buffer_to_write, target_screen_width, target_screen_height);
     IT8951_Display4BppBuffer();
     pthread_mutex_unlock(&board_mutex);
 
