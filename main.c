@@ -26,24 +26,17 @@ void abort_(const char * s) {
     abort();
 }
 
-void fill_linear_gradient_4bpp(uint8_t *buffer, int width, int height) {
+void fill_linear_gradient_8bpp(uint8_t *buffer, int width, int height) {
     uint8_t *pixels = buffer + 2; // Skip first 2 bytes (protocol header)
-    int bytes_per_row = width / 2;
+    int bytes_per_row = width;
 
     for (int y = 0; y < height; ++y) {
-        for (int x = 0; x < width; x += 2) {
-            // Compute grayscale levels [0–15] for two adjacent pixels
-            float gx0 = (float)x / (width - 1);
-            float gx1 = (float)(x + 1) / (width - 1);
+        for (int x = 0; x < width; ++x) {
+            float gx = (float)x / (width - 1);
+            uint8_t gray = (uint8_t)(gx * 255.0f + 0.5f);
 
-            uint8_t g0 = (uint8_t)(gx0 * 15.0f + 0.5f);
-            uint8_t g1 = (uint8_t)(gx1 * 15.0f + 0.5f);
-
-            // Pack two 4-bit grayscale values into one byte
-            uint8_t packed = (g0 << 4) | (g1 & 0x0F);
-
-            int byte_index = y * bytes_per_row + (x / 2);
-            pixels[byte_index] = packed;
+            int byte_index = y * bytes_per_row + x;
+            pixels[byte_index] = gray;
         }
     }
 }
@@ -149,16 +142,16 @@ int display_4bpp_filename(char *filename) {
     png_byte bit_depth;
     int width, height;
 
-    printf("Reading file: %s\n", filename);
-    if (read_png_file(filename, &width, &height, &color_type, &bit_depth, buffer_to_write)) return 1;
+    // printf("Reading file: %s\n", filename);
+    // if (read_png_file(filename, &width, &height, &color_type, &bit_depth, buffer_to_write)) return 1;
 
-    if (width != target_screen_width || height != target_screen_height) {
-        printf("Image should be %dx%d but it's %dx%d\n", target_screen_width, target_screen_height, width, height);
-        return 1;
-    }
+    // if (width != target_screen_width || height != target_screen_height) {
+    //     printf("Image should be %dx%d but it's %dx%d\n", target_screen_width, target_screen_height, width, height);
+    //     return 1;
+    // }
     printf("Updating screen for file: %s\n", filename);
     pthread_mutex_lock(&board_mutex);
-    fill_linear_gradient_4bpp(buffer_to_write, target_screen_width, target_screen_height);
+    fill_linear_gradient_8bpp(buffer_to_write, target_screen_width, target_screen_height);
     IT8951_Display4BppBuffer();
     pthread_mutex_unlock(&board_mutex);
 

@@ -310,7 +310,7 @@ void IT8951HostAreaPackedPixelWrite(IT8951LdImgInfo* pstLdImgInfo)
     t = clock() - t;
     double time_taken = ((double)t)/CLOCKS_PER_SEC; // in seconds
 
-    LCDWriteNData(pusFrameBuf, 1872 * 1404 / 2);
+    LCDWriteNData(pusFrameBuf, 1872 * 1404);
     printf("LCDWriteNData took %f seconds to execute \n", time_taken);
 	IT8951LoadImgEnd();
 }
@@ -367,7 +367,7 @@ uint8_t *IT8951_Init(int expected_width, int expected_height, int reverted)
     if (expected_width != gstI80DevInfo.usPanelW || expected_height != gstI80DevInfo.usPanelH) {
         perror("Screen width and height is different from the expected one. It could compromise the following commands");
     }
-	gpFrameBuf = malloc(expected_width * expected_height / 2 + 2);
+	gpFrameBuf = malloc(expected_width * expected_height + 2);
 	if (!gpFrameBuf)
 	{
 		perror("malloc error!\n");
@@ -389,7 +389,7 @@ uint8_t *IT8951_Init(int expected_width, int expected_height, int reverted)
     //Setting Load image information
     stLdImgInfo.ulStartFBAddr    = (uint32_t)gpFrameBuf;
     stLdImgInfo.usEndianType     = IT8951_LDIMG_B_ENDIAN;
-    stLdImgInfo.usPixelFormat    = IT8951_4BPP;
+    stLdImgInfo.usPixelFormat    = IT8951_8BPP;
     stLdImgInfo.usRotate         = reverted ? IT8951_ROTATE_180 : IT8951_ROTATE_0;
     stLdImgInfo.ulImgBufBaseAddr = gulImgBufAddr;
 
