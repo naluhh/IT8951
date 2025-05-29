@@ -143,15 +143,15 @@ int display_4bpp_filename(char *filename) {
     int width, height;
 
     // printf("Reading file: %s\n", filename);
-    // if (read_png_file(filename, &width, &height, &color_type, &bit_depth, buffer_to_write)) return 1;
+    if (read_png_file(filename, &width, &height, &color_type, &bit_depth, buffer_to_write)) return 1;
 
-    // if (width != target_screen_width || height != target_screen_height) {
-    //     printf("Image should be %dx%d but it's %dx%d\n", target_screen_width, target_screen_height, width, height);
-    //     return 1;
-    // }
+    if (width != target_screen_width || height != target_screen_height) {
+        printf("Image should be %dx%d but it's %dx%d\n", target_screen_width, target_screen_height, width, height);
+        return 1;
+    }
     printf("Updating screen for file: %s\n", filename);
     pthread_mutex_lock(&board_mutex);
-    fill_linear_gradient_8bpp(buffer_to_write, target_screen_width, target_screen_height);
+    // fill_linear_gradient_8bpp(buffer_to_write, target_screen_width, target_screen_height);
     IT8951_Display4BppBuffer();
     pthread_mutex_unlock(&board_mutex);
 
